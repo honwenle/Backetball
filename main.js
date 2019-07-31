@@ -4,7 +4,7 @@ var can = document.getElementById('cvs')
 var ctx = can.getContext('2d')
 can.width = WIDTH
 can.height = HEIGHT
-var ox = 50, oy = 0, dirY = 1, speed = 0, g = 1
+var oX = 50, oY = 0, dirY = 1, speedY = 0
 
 var imgBall = new Image()
 imgBall.onload = init
@@ -16,34 +16,34 @@ function init() {
 }
 
 function calc() {
-  speed += dirY * g
-  if (speed < 0) {
-    speed = 0
+  speedY += dirY
+  if (speedY < 0) {
+    speedY = 0
   }
-  if (speed == 0) {
+  if (speedY == 0) {
     if (dirY == 1) {
       dirY = 0
     }
     dirY = 1
   }
-  oy += dirY * speed
-  if (oy + 50 > HEIGHT) {
-    oy = HEIGHT - 50
+  oY += dirY * speedY
+  if (oY + 50 > HEIGHT) {
+    oY = HEIGHT - 50
   }
-  if (oy + 50 == HEIGHT) {
+  if (oY + 50 == HEIGHT) {
     dirY = -1
-    speed *= .9
+    speedY *= .9
   }
 }
 function render() {
   calc()
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
-  ctx.drawImage(imgBall, ox, oy)
+  ctx.drawImage(imgBall, oX, oY)
   window.requestAnimationFrame(render)
 }
 function bindEvent() {
   document.addEventListener('touchstart', function(e) {
     dirY = -1
-    speed = 12
+    speedY = 12
   })
 }
