@@ -4,14 +4,23 @@ var can = document.getElementById('cvs')
 var ctx = can.getContext('2d')
 can.width = WIDTH
 can.height = HEIGHT
-var oX = 0, dirX = 1, speedX = 20,
+var oX = WIDTH - 50, dirX = -1, speedX = 20,
     oY = 200, dirY = -1, speedY = 20,
     g = 1, m = .02
-var sX, sY, tm, deg = 0
+var sX, sY, tm, deg = 0, res_count = 0
 var imgBall = new Image()
-imgBall.onload = init
+imgBall.onload = handleLoad
 imgBall.src = 'ball.png'
+var imgNet = new Image()
+imgNet.onload = handleLoad
+imgNet.src = 'net.png'
 
+function handleLoad() {
+  res_count += 1
+  if (res_count == 2) {
+    init()
+  }
+}
 function init() {
   bindEvent()
   render()
@@ -30,11 +39,7 @@ function calc() {
   }
   if (oY + 50 == HEIGHT) {
     speedX -= m
-    if (deg <= 0 && speedX <= 0) {
-      deg = 0
-    } else {
-      deg += speedX * dirX
-    }
+    deg += speedX * dirX
   }
   oY += dirY * speedY
   oX += dirX * speedX
@@ -66,6 +71,7 @@ function render() {
   calc()
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
   drawBall()
+  ctx.drawImage(imgNet, 0, HEIGHT * .3)
   window.requestAnimationFrame(render)
 }
 function bindEvent() {
