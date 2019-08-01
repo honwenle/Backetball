@@ -24,13 +24,13 @@ function calc() {
     speedY = 0
     dirY = 1
   }
-  if (speedX < 0) {
+  if (speedX <= 0) {
     speedX = 0
     dirX = 0
   }
   if (oY + 50 == HEIGHT) {
     speedX -= m
-    if (deg <= 0) {
+    if (deg <= 0 && speedX <= 0) {
       deg = 0
     } else {
       deg += speedX * dirX
