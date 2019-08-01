@@ -7,7 +7,7 @@ can.height = HEIGHT
 var oX = 0, dirX = 1, speedX = 20,
     oY = 200, dirY = -1, speedY = 20,
     g = 1, m = .02
-var sX, sY, tm
+var sX, sY, tm, deg = 0
 var imgBall = new Image()
 imgBall.onload = init
 imgBall.src = 'ball.png'
@@ -18,6 +18,7 @@ function init() {
 }
 
 function calc() {
+  deg += 1 * dirX
   speedY += dirY
   if (speedY < 0) {
     speedY = 0
@@ -29,6 +30,11 @@ function calc() {
   }
   if (oY + 50 == HEIGHT) {
     speedX -= m
+    if (deg <= 0) {
+      deg = 0
+    } else {
+      deg += speedX * dirX
+    }
   }
   oY += dirY * speedY
   oX += dirX * speedX
@@ -48,10 +54,18 @@ function calc() {
     speedX *= .8
   }
 }
+function drawBall() {
+  ctx.save()
+  ctx.translate(oX + 25, oY + 25)
+  ctx.rotate(deg * Math.PI/180)
+  ctx.translate(-oX - 25, -oY - 25)
+  ctx.drawImage(imgBall, oX, oY)
+  ctx.restore()
+}
 function render() {
   calc()
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
-  ctx.drawImage(imgBall, oX, oY)
+  drawBall()
   window.requestAnimationFrame(render)
 }
 function bindEvent() {
