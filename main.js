@@ -7,7 +7,7 @@ can.height = HEIGHT
 var oX = 0, dirX = 1, speedX = 20,
     oY = 200, dirY = -1, speedY = 20,
     g = 1, m = .02
-
+var sX, sY, tm
 var imgBall = new Image()
 imgBall.onload = init
 imgBall.src = 'ball.png'
@@ -56,7 +56,15 @@ function render() {
 }
 function bindEvent() {
   document.addEventListener('touchstart', function(e) {
-    dirY = -1
-    speedY = 12
+    e.preventDefault()
+    sX = e.touches[0].pageX
+    sY = e.touches[0].pageY
+    tm = Date.now()
+  }, {passive: false})
+  document.addEventListener('touchend', function(e) {
+    dirX = sX < e.changedTouches[0].pageX ? 1 : -1
+    dirY = sY < e.changedTouches[0].pageY ? 1 : -1
+    speedX = Math.abs(sX - e.changedTouches[0].pageX) / (Date.now() - tm) * 10
+    speedY = Math.abs(sY - e.changedTouches[0].pageY) / (Date.now() - tm) * 10
   })
 }
