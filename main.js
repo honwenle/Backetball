@@ -14,6 +14,7 @@ imgBall.src = 'ball.png'
 var imgNet = new Image()
 imgNet.onload = handleLoad
 imgNet.src = 'net.png'
+var netX, netY = HEIGHT * .3 + 5
 
 function handleLoad() {
   res_count += 1
@@ -22,11 +23,18 @@ function handleLoad() {
   }
 }
 function init() {
+  netX = imgNet.width
   bindEvent()
   render()
 }
 
-function checkBang() {}
+function checkBang() {
+  var dx = oX+25 - netX + vX
+  var dy = oY+25 - netY + vY
+  if (dx*dx + dy*dy <= 25*25) {
+    console.log('b')
+  }
+}
 function update() {
   deg += vX
   if (oY + 50 == HEIGHT) {
@@ -71,4 +79,14 @@ function bindEvent() {
     vX = (e.changedTouches[0].pageX - sX) / (Date.now() - tm) * 10
     vY = (e.changedTouches[0].pageY - sY) / (Date.now() - tm) * 10
   })
+  // document.addEventListener('touchmove', function(e) {
+  //   oX = e.changedTouches[0].pageX
+  //   oY = e.changedTouches[0].pageY
+  // })
 }
+/**
+ * (
+ * -(2*A*B*y + (A*A-B*B)*x + 2*A*C) / (A*A + B*B),
+ * -((B*B - A*A)*y + 2*A*B*x + 2*B*C) / (A*A + B*B)
+ * )
+ */
