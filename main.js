@@ -4,9 +4,9 @@ var can = document.getElementById('cvs')
 var ctx = can.getContext('2d')
 can.width = WIDTH
 can.height = HEIGHT
-var oX = WIDTH - 50, dirX = -1, speedX = 20,
-    oY = 200, dirY = -1, speedY = 20,
-    g = 1, m = .02
+var oX = WIDTH - 50, vX = 0,
+    oY = 200, vY = 0
+    g = .9, m = .01
 var sX, sY, tm, deg = 0, res_count = 0
 var imgBall = new Image()
 imgBall.onload = handleLoad
@@ -26,41 +26,23 @@ function init() {
   render()
 }
 
-function calc() {
-  deg += 1 * dirX
-  speedY += dirY
-  if (speedY < 0) {
-    speedY = 0
-    dirY = 1
-  }
-  if (speedX <= 0) {
-    speedX = 0
-    dirX = 0
-  }
+function checkBang() {}
+function update() {
+  deg += vX
   if (oY + 50 == HEIGHT) {
-    speedX -= m
-    deg += speedX * dirX
+    vX -= m
   }
-  oY += dirY * speedY
-  oX += dirX * speedX
-  if (oY + 50 > HEIGHT) {
-    oY = HEIGHT - 50
-    dirY = -1
-    speedY *= .9
+  if (oY + 50 + vY > HEIGHT) {
+    vY *= -.9
+    vX += (vX > 0 ? -1 : 1) * m
+  } else {
+    vY += g
   }
-  if (oX + 50 > WIDTH) {
-    oX = WIDTH - 50
-    dirX = -1
-    speedX *= .8
+  oY += vY
+  if ((oX + 50 + vX > WIDTH ) || oX + vX < 0) {
+    vX *= -.8
   }
-  if (oX < 0) {
-    oX = 0
-    dirX = 1
-    speedX *= .8
-  }
-  if (dirY == 1 && oY > (HEIGHT * .3 - 25) && oY < (HEIGHT * .3 + 5 - 25) && oX <= 8) {
-    console.log('ok')
-  }
+  oX += vX
 }
 function drawBall() {
   ctx.save()
@@ -71,11 +53,12 @@ function drawBall() {
   ctx.restore()
 }
 function render() {
-  calc()
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
   drawBall()
+  checkBang()
+  update()
   ctx.drawImage(imgNet, 0, HEIGHT * .3)
-  window.requestAnimationFrame(render)
+  raf = window.requestAnimationFrame(render)
 }
 function bindEvent() {
   document.addEventListener('touchstart', function(e) {
@@ -85,9 +68,7 @@ function bindEvent() {
     tm = Date.now()
   }, {passive: false})
   document.addEventListener('touchend', function(e) {
-    dirX = sX < e.changedTouches[0].pageX ? 1 : -1
-    dirY = sY < e.changedTouches[0].pageY ? 1 : -1
-    speedX = Math.abs(sX - e.changedTouches[0].pageX) / (Date.now() - tm) * 10
-    speedY = Math.abs(sY - e.changedTouches[0].pageY) / (Date.now() - tm) * 10
+    vX = (e.changedTouches[0].pageX - sX) / (Date.now() - tm) * 10
+    vY = (e.changedTouches[0].pageY - sY) / (Date.now() - tm) * 10
   })
 }
