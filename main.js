@@ -58,6 +58,9 @@ function calc() {
     dirX = 1
     speedX *= .8
   }
+  if (dirY == 1 && oY > (HEIGHT * .3 - 25) && oY < (HEIGHT * .3 + 5 - 25) && oX <= 8) {
+    console.log('ok')
+  }
 }
 function drawBall() {
   ctx.save()
