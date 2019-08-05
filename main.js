@@ -4,7 +4,7 @@ var can = document.getElementById('cvs')
 var ctx = can.getContext('2d')
 can.width = WIDTH
 can.height = HEIGHT
-var oX = 58-24, vX = 0,
+var oX = 58-25, vX = 0,
     oY = 0, vY = 0
     g = .9, m = .01
 var sX, sY, tm, deg = 0, res_count = 0
@@ -65,8 +65,8 @@ function drawBall() {
 function render() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
   drawBall()
-  checkBang()
   update()
+  checkBang()
   ctx.drawImage(imgNet, 0, HEIGHT * .3)
   raf = window.requestAnimationFrame(render)
 }
@@ -94,8 +94,8 @@ function bindEvent() {
  */
 function getReflect(dx,dy) {
   var k = dy/dx, x = -vX, y = vY
-  return [
+  return dx ? [
     .8 * (2*k*y - (k*k-1)*x) / (k*k + 1),
     .8 * -(2*k*x - (1 - k*k)*y) / (k*k + 1)
-  ]
+  ] : [vX, -vY]
 }
