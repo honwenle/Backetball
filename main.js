@@ -4,7 +4,7 @@ var can = document.getElementById('cvs')
 var ctx = can.getContext('2d')
 can.width = WIDTH
 can.height = HEIGHT
-var oX = 58-25, vX = 0,
+var oX = 90, vX = 0,
     oY = 0, vY = 0
     g = .9, m = .01
 var sX, sY, tm, deg = 0, res_count = 0
@@ -29,9 +29,9 @@ function init() {
 }
 
 function checkBang() {
-  var dx = oX+25 - netX + vX
-  var dy = netY - (oY+25 + vY)
-  if (dx*dx + dy*dy <= 25*25) {
+  var dx = oX+25 - netX
+  var dy = netY - (oY+25)
+  if (dx*dx + dy*dy < 25*25) {
     [vX, vY] = getReflect(dx, dy)
     // TODO: 速度过快会导致预判断间隙太大，出现明显断层
     // FIXME: 速度过慢导致不能弹开而逐渐陷入
