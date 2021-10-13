@@ -8,7 +8,8 @@ var oX = 90, vX = 0,
     oY = 0, vY = 0
     g = .9, m = .01
 var sX, sY, tm, deg = 0, res_count = 0,
-    bangLock = false, ballStep = 0
+    bangLock = false, ballStep = 0,
+    score = 0
 var imgBall = new Image()
 imgBall.onload = handleLoad
 imgBall.src = 'ball.png'
@@ -34,7 +35,7 @@ function checkGoal() {
     if (oY+25 > netY) {
       ballStep = 1
       if (oX+25 < netX) {
-        console.log('goal');
+        score += 1
       }
     }
   } else {
@@ -81,12 +82,20 @@ function drawBall() {
   ctx.drawImage(imgBall, oX, oY)
   ctx.restore()
 }
+function drawScore() {
+  ctx.save()
+  ctx.font = '20px Arial'
+  ctx.fillStyle = "#F7941D";
+  ctx.fillText('Score: ' + score, 10, 50)
+  ctx.restore()
+}
 function render() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
   drawBall()
   checkBang()
   checkGoal()
   update()
+  drawScore()
   ctx.drawImage(imgNet, 0, HEIGHT * .3)
   raf = window.requestAnimationFrame(render)
 }
