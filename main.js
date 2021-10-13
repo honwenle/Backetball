@@ -110,7 +110,7 @@ function bindEvent() {
   document.addEventListener('touchstart', function(e) {
     // 计时开始
     if (time < 1) {
-      time = 10
+      time = 60
       score = 0
       timer = setInterval(() => {
         time -= 1
