@@ -9,7 +9,8 @@ var oX = 90, vX = 0,
     g = .9, m = .01
 var sX, sY, tm, deg = 0, res_count = 0,
     bangLock = false, ballStep = 0,
-    score = 0
+    score = 0,
+    trail = 1
 var imgBall = new Image()
 imgBall.onload = handleLoad
 imgBall.src = 'ball.png'
@@ -25,6 +26,7 @@ function handleLoad() {
   }
 }
 function init() {
+  trail = /trail/.test(location.hash) ? 0.25 : 1
   netX = imgNet.width
   bindEvent()
   render()
@@ -90,7 +92,9 @@ function drawScore() {
   ctx.restore()
 }
 function render() {
-  ctx.clearRect(0, 0, WIDTH, HEIGHT)
+  // ctx.clearRect(0, 0, WIDTH, HEIGHT)
+  ctx.fillStyle = `rgba(255, 255, 255, ${trail})`
+  ctx.fillRect(0, 0, WIDTH, HEIGHT)
   drawBall()
   checkBang()
   checkGoal()
