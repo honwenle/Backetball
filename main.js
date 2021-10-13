@@ -9,7 +9,7 @@ var oX = 90, vX = 0,
     g = .9, m = .01
 var sX, sY, tm, deg = 0, res_count = 0,
     bangLock = false, ballStep = 0,
-    score = 0,
+    score = 0, time = 0, timer = null,
     trail = 1
 var imgBall = new Image()
 imgBall.onload = handleLoad
@@ -88,7 +88,10 @@ function drawScore() {
   ctx.save()
   ctx.font = '20px Arial'
   ctx.fillStyle = "#F7941D";
+  ctx.textAlign = 'start'
   ctx.fillText('Score: ' + score, 10, 50)
+  ctx.textAlign = 'end'
+  ctx.fillText('Time: ' + time, WIDTH-10, 50)
   ctx.restore()
 }
 function render() {
@@ -105,6 +108,20 @@ function render() {
 }
 function bindEvent() {
   document.addEventListener('touchstart', function(e) {
+    // 计时开始
+    if (time < 1) {
+      time = 10
+      score = 0
+      timer = setInterval(() => {
+        time -= 1
+        if (time < 1) {
+          clearInterval(timer)
+          document.title = '我投进了' + score + '个球，你也来试试吧'
+          alert('时间到！触屏开始重新计分')
+        }
+      }, 1000)
+    }
+
     e.preventDefault()
     sX = e.touches[0].pageX
     sY = e.touches[0].pageY
