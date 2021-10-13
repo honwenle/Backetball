@@ -7,7 +7,7 @@ can.height = HEIGHT
 var oX = 90, vX = 0,
     oY = 0, vY = 0
     g = .9, m = .01
-var sX, sY, tm, deg = 0, res_count = 0
+var sX, sY, tm, deg = 0, res_count = 0, bangLock = false
 var imgBall = new Image()
 imgBall.onload = handleLoad
 imgBall.src = 'ball.png'
@@ -32,9 +32,13 @@ function checkBang() {
   var dx = oX+25 - netX
   var dy = netY - (oY+25)
   if (dx*dx + dy*dy < 25*25) {
-    [vX, vY] = getReflect(dx, dy)
-    // TODO: 速度过快会导致预判断间隙太大，出现明显断层
-    // FIXME: 速度过慢导致不能弹开而逐渐陷入
+    console.log('bang');
+    if (!bangLock) {
+      [vX, vY] = getReflect(dx, dy)
+      bangLock = true
+    }
+  } else {
+    bangLock = false
   }
 }
 function update() {
@@ -44,7 +48,7 @@ function update() {
   }
   if (oY + 50 + vY > HEIGHT) {
     vY *= -.9
-    vX += (vX > 0 ? -1 : 1) * m
+    vX += vX ? vX > 0 ? -m : m : 0
   } else {
     vY += g
   }
@@ -65,8 +69,8 @@ function drawBall() {
 function render() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
   drawBall()
-  update()
   checkBang()
+  update()
   ctx.drawImage(imgNet, 0, HEIGHT * .3)
   raf = window.requestAnimationFrame(render)
 }
@@ -78,8 +82,8 @@ function bindEvent() {
     tm = Date.now()
   }, {passive: false})
   document.addEventListener('touchend', function(e) {
-    vX = (e.changedTouches[0].pageX - sX) / (Date.now() - tm) * 10
-    vY = (e.changedTouches[0].pageY - sY) / (Date.now() - tm) * 10
+    vX = (e.changedTouches[0].pageX - sX) / (Date.now() - tm) * 15
+    vY = (e.changedTouches[0].pageY - sY) / (Date.now() - tm) * 15
   })
   // document.addEventListener('touchmove', function(e) {
   //   oX = e.changedTouches[0].pageX
