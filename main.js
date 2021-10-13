@@ -7,7 +7,8 @@ can.height = HEIGHT
 var oX = 90, vX = 0,
     oY = 0, vY = 0
     g = .9, m = .01
-var sX, sY, tm, deg = 0, res_count = 0, bangLock = false
+var sX, sY, tm, deg = 0, res_count = 0,
+    bangLock = false, ballStep = 0
 var imgBall = new Image()
 imgBall.onload = handleLoad
 imgBall.src = 'ball.png'
@@ -28,6 +29,20 @@ function init() {
   render()
 }
 
+function checkGoal() {
+  if (ballStep == 0) {
+    if (oY+25 > netY) {
+      ballStep = 1
+      if (oX+25 < netX) {
+        console.log('goal');
+      }
+    }
+  } else {
+    if (oY+25 < netY) {
+      ballStep = 0
+    }
+  }
+}
 function checkBang() {
   var dx = oX+25 - netX
   var dy = netY - (oY+25)
@@ -70,6 +85,7 @@ function render() {
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
   drawBall()
   checkBang()
+  checkGoal()
   update()
   ctx.drawImage(imgNet, 0, HEIGHT * .3)
   raf = window.requestAnimationFrame(render)
